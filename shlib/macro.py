@@ -20,3 +20,14 @@ SIX_CHANNEL_EXTS = [
 ]
 
 CHANNELS = SIX_CHANNELS + SIX_CHANNEL_EXTS
+
+DECOCTION_INFO_SHOW_TEMPLATE = """\
+方剂名称：{}
+体证：{}
+脉证：{}
+阴阳：{}，六经：{}
+药方：{}
+对应证原文：{}
+方剂原文：{}
+服药原文：{}
+"""

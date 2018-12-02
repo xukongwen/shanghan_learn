@@ -5,6 +5,7 @@
 # CreateTime: 2018-11-25 21:21:05
 
 from .utils import lazy_property
+from .macro import DECOCTION_INFO_SHOW_TEMPLATE
 from .tools import convert_dosage, show_wx_trend
 from .medicine import medicine_wx_mapping
 
@@ -13,12 +14,12 @@ class DecoctionInfo(object):
     """汤药方剂信息"""
 
     def __init__(self, name, medicine_list, **kwargs):
-        self.name = name                            # 方剂名称
-        self.medicine_list = medicine_list          # 药方
-        self.sign = kwargs.get("sign")              # 体证
-        self.pulse_sign = kwargs.get("pulse_sign")  # 脉证
-        self.yinyang = kwargs.get("yinyang")        # 阴阳
-        self.six_channel = kwargs.get("six_yy")     # 阴阳六经
+        self.name = name                              # 方剂名称
+        self.medicine_list = medicine_list            # 药方
+        self.sign = kwargs.get("sign")                # 体证
+        self.pulse_sign = kwargs.get("pulse_sign")    # 脉证
+        self.yinyang = kwargs.get("yinyang")          # 阴阳
+        self.six_channel = kwargs.get("six_channel")  # 阴阳六经
         self.sign_source_text = kwargs.get("sign_source_text")  # 对应证原文
         # 方剂原文
         self.medicine_list_source_text = kwargs.get("medicine_list_source_text")
@@ -55,12 +56,12 @@ class DecoctionInfo(object):
             "    {}: {}".format(medicine, dosage)
             for medicine, dosage in self.medicine_list.items()
         ])
-        print(__decoction_info_show_template.format(
+        print(DECOCTION_INFO_SHOW_TEMPLATE.format(
             self.name,
             self.sign,
             self.pulse_sign,
             self.yinyang,
-            self.six_yy,
+            self.six_channel,
             medicine_list_info,
             self.sign_source_text,
             self.medicine_list_source_text,
@@ -69,15 +70,3 @@ class DecoctionInfo(object):
 
     def show_wx_trend(self):
         show_wx_trend((self.name + " 之药性五行参考图"), self.wx_weight)
-
-
-__decoction_info_show_template = """\
-方剂名称：{}
-体证：{}
-脉证：{}
-阴阳：{}，六经：{}
-药方：{}
-对应证原文：{}
-方剂原文：{}
-服药原文：{}
-"""
