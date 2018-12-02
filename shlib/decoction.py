@@ -4,11 +4,8 @@
 # Author: Huoty <sudohuoty@gmail.com>
 # CreateTime: 2018-11-25 21:21:05
 
-import numpy as np
-import matplotlib.pyplot as plt
-
 from .utils import lazy_property
-from .tools import convert_dosage
+from .tools import convert_dosage, show_wx_trend
 from .medicine import medicine_wx_mapping
 
 
@@ -32,7 +29,7 @@ class DecoctionInfo(object):
     def medicine_weight_list(self):
         """药方药物重量(单位从古单位换为克)"""
         return {
-            medicine: convert_dosage(old_weight)
+            medicine: convert_dosage(old_weight, medicine)
             for medicine, old_weight in self.medicine_list.items()
         }
 
@@ -71,28 +68,7 @@ class DecoctionInfo(object):
         ))
 
     def show_wx_trend(self):
-        medicine_list = self.wx_weight.copy()
-        medicine_list.pop("无", "")
-
-        labels = list("水木土金火")
-        # 数据个数
-        dataLenth = 5
-        # 数据
-        data = [medicine_list.get(lab, 0)for lab in labels]
-
-        angles = np.linspace(0, 2 * np.pi, dataLenth, endpoint=False)
-        data = np.concatenate((data, [data[0]]))  # 闭合
-        angles = np.concatenate((angles, [angles[0]]))  # 闭合
-
-        fig = plt.figure(figsize=(12, 10))
-        ax = fig.add_subplot(111, polar=True)  # polar参数！！
-        ax.plot(angles, data, 'r', linewidth=2, alpha=0.5)  # 画线
-        ax.fill(angles, data, facecolor='r', alpha=0.5)  # 填充
-        ax.set_thetagrids(angles * 180/np.pi, labels)
-        ax.set_title(fname+"之药性五行参考图", va='bottom')
-        ax.set_rlim(0, max(data))
-        ax.grid(True)
-        plt.show()
+        show_wx_trend((self.name + " 之药性五行参考图"), self.wx_weight)
 
 
 __decoction_info_show_template = """\
