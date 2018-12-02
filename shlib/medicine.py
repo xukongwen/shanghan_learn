@@ -40,6 +40,9 @@ class MedicineWXMapping(UserDict):
             return self["炙甘草"]
         return super().__getitem__(key)
 
+    def __missing__(self, key):
+        return "无"
+
 
 # 药与五行属性的对应关系
 medicine_wx_mapping = MedicineWXMapping()

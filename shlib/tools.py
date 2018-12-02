@@ -4,6 +4,10 @@
 # Author: Huoty <sudohuoty@gmail.com>
 # CreateTime: 2018-11-25 20:32:59
 
+import numpy as np
+import matplotlib.pyplot as plt
+
+
 _weight_conversion_mapping = {
     "斤": 250,
     "两": 15.625,
@@ -34,7 +38,7 @@ _weight_conversion_mapping = {
 _zh_arab_digit_mapping = dict(zip("一二三四五六七八九十", range(1, 11)))
 
 
-def convert_dosage(self, dosage, medicine=None):
+def convert_dosage(dosage, medicine=None):
     """转换药物剂量到克
 
     一些特殊药物的换算：
@@ -48,7 +52,7 @@ def convert_dosage(self, dosage, medicine=None):
         石膏鸡蛋大1枚约40克 厚朴1尺约30克   竹叶一握约12克
     """
     for old_unit, gram in _weight_conversion_mapping.items():
-        if "枚" in dosage:
+        if medicine and "枚" in dosage:
             if "枣" in medicine:
                 gram = 36.0 / 12
             elif "杏仁" in medicine:
@@ -61,3 +65,26 @@ def convert_dosage(self, dosage, medicine=None):
     dosage = dosage.strip().strip("*")
     dosage = eval(dosage)
     return dosage
+
+
+def show_wx_trend(title, wx_weight):
+    medicine_list = wx_weight.copy()
+    medicine_list.pop("无", "")
+
+    labels = list("水木土金火")
+    data = [medicine_list.get(lab, 0)for lab in labels]
+    data_len = len(data)
+
+    angles = np.linspace(0, 2 * np.pi, data_len, endpoint=False)
+    data = np.concatenate((data, [data[0]]))  # 闭合
+    angles = np.concatenate((angles, [angles[0]]))  # 闭合
+
+    fig = plt.figure(figsize=(8, 6))
+    ax = fig.add_subplot(111, polar=True)  # polar 参数
+    ax.plot(angles, data, 'r', linewidth=2, alpha=0.5)  # 画线
+    ax.fill(angles, data, facecolor='r', alpha=0.5)  # 填充
+    ax.set_thetagrids(angles * 180/np.pi, labels)
+    ax.set_title(title, va='bottom')
+    ax.set_rlim(0, max(data))
+    ax.grid(True)
+    plt.show()
